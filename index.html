@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>بودي سين جيم - سينجل + أونلاين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, #020617, #020617 40%, #000 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(15,23,42,0.97);
+      border-bottom: 1px solid rgba(55,65,81,0.8);
+      backdrop-filter: blur(10px);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #facc15, #e11d48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-weight: 800;
+    }
+    .logo-text-sub {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+    }
+    .nav-link {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      color: inherit;
+      transition: 0.15s;
+    }
+    .nav-link:hover {
+      background: rgba(31,41,55,0.9);
+      border-color: rgba(75,85,99,0.9);
+    }
+    .nav-link.primary {
+      background: linear-gradient(135deg,#4f46e5,#06b6d4);
+      color: #fff;
+    }
+
+    .hero {
+      padding: 28px 0 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+      gap: 22px;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg,#22c55e,#eab308,#f97316);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 0.95rem;
+      color: #9ca3af;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 9px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.07s transform, 0.07s box-shadow, 0.15s opacity;
+      white-space: nowrap;
+    }
+    .btn:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#4f46e5,#06b6d4);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(37,99,235,0.5);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+    }
+    .tag {
+      display: inline-flex;
+      gap:6px;
+      align-items:center;
+      padding: 4px 10px;
+      border-radius:999px;
+      border:1px solid rgba(75,85,99,0.8);
+      font-size:0.75rem;
+      color:#9ca3af;
+      margin-top:4px;
+    }
+
+    .hero-note {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .hero-card {
+      background:
+        radial-gradient(circle at top,rgba(56,189,248,0.12),transparent 60%),
+        radial-gradient(circle at bottom,rgba(244,114,182,0.12),transparent 60%),
+        #020617;
+      border-radius: 20px;
+      border: 1px solid rgba(75,85,99,0.9);
+      padding: 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+    }
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .pill {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.9);
+      font-size: 0.8rem;
+    }
+
+    .teams {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .team-card {
+      border-radius:14px;
+      border:1px solid rgba(55,65,81,0.9);
+      background:rgba(15,23,42,0.96);
+      padding:8px;
+      font-size:0.8rem;
+    }
+    .team-name { font-weight:600; margin-bottom:3px;}
+    .team-score { font-size:1.2rem; font-weight:800;}
+    .team-a { color:#38bdf8;}
+    .team-b { color:#f97316;}
+
+    .categories-preview {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:8px;
+    }
+    .cat-chip {
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(15,23,42,0.9);
+      border:1px solid rgba(55,65,81,0.9);
+      font-size:0.75rem;
+    }
+    .question-preview {
+      font-size:0.9rem;
+      margin-bottom:8px;
+    }
+    .question-preview span { color:#a855f7;}
+
+    .hero-card-footer {
+      font-size:0.78rem;
+      color:#9ca3af;
+    }
+
+    section { margin-top:36px;}
+    .section-title { font-size:1.3rem; font-weight:700; margin-bottom:6px;}
+    .section-subtitle { font-size:0.9rem; color:#9ca3af; margin-bottom:14px;}
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+      gap:16px;
+    }
+    .card {
+      background:#020617;
+      border-radius:14px;
+      border:1px solid rgba(55,65,81,0.9);
+      padding:12px;
+      font-size:0.9rem;
+      line-height:1.7;
+    }
+    .list { padding-right:18px; }
+
+    /* OVERLAYS */
+    .overlay {
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.92);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:20;
+    }
+    .overlay.visible { display:flex; }
+    .overlay-card {
+      width:100%;
+      max-width:480px;
+      background:#020617;
+      border-radius:18px;
+      border:1px solid rgba(75,85,99,0.9);
+      padding:16px 14px 14px;
+    }
+    .overlay-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    .overlay-title { font-size:1rem; font-weight:600;}
+    .overlay-close {
+      border-radius:999px;
+      border:1px solid transparent;
+      background:transparent;
+      color:#9ca3af;
+      cursor:pointer;
+      padding:2px 8px;
+      font-size:0.85rem;
+    }
+    .overlay-close:hover {
+      border-color:#4b5563;
+      background:#020617;
+    }
+
+    .field { margin-bottom:10px;}
+    .field-label {
+      font-size:0.8rem;
+      margin-bottom:3px;
+      color:#9ca3af;
+    }
+    .field-input, .select-input, .field-textarea {
+      width:100%;
+      border-radius:10px;
+      border:1px solid #374151;
+      background:#020617;
+      padding:7px 9px;
+      color:#e5e7eb;
+      font-size:0.9rem;
+      outline:none;
+    }
+    .field-textarea { resize:vertical; min-height:70px;}
+    .field-input:focus, .select-input:focus, .field-textarea:focus {
+      border-color:#6366f1;
+      box-shadow:0 0 0 1px rgba(99,102,241,0.25);
+    }
+    .hint { font-size:0.75rem; color:#6b7280; margin-top:6px;}
+
+    /* GAME OVERLAY */
+    .game-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) minmax(0,0.95fr);
+      gap:10px;
+      font-size:0.85rem;
+    }
+    .pill-small {
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      font-size:0.75rem;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid #374151;
+      background:#020617;
+    }
+    .game-cats {
+      margin-top:6px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:6px;
+    }
+    .cat-card {
+      padding:6px 7px;
+      border-radius:10px;
+      border:1px solid #374151;
+      background:#020617;
+      cursor:pointer;
+      transition:0.12s border-color,0.12s background,0.06s transform;
+    }
+    .cat-card:hover {
+      border-color:#6366f1;
+      transform:translateY(-1px);
+    }
+    .cat-card.selected-team-a {
+      border-color:#38bdf8;
+      background:rgba(15,23,42,0.97);
+    }
+    .cat-card.selected-team-b {
+      border-color:#f97316;
+      background:rgba(24,16,7,0.97);
+    }
+    .cat-name { font-size:0.85rem; margin-bottom:2px;}
+    .cat-meta { font-size:0.7rem; color:#9ca3af;}
+
+    .game-main {
+      border-radius:12px;
+      border:1px solid #374151;
+      background:#020617;
+      padding:8px;
+    }
+    .game-meta {
+      font-size:0.75rem;
+      color:#9ca3af;
+      margin-bottom:6px;
+    }
+    .game-question {
+      font-size:0.95rem;
+      min-height:48px;
+      margin-bottom:8px;
+    }
+    .game-scores {
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      font-size:0.8rem;
+      margin-bottom:6px;
+    }
+    .team-label { font-weight:600;}
+    .team-a-text { color:#38bdf8;}
+    .team-b-text { color:#f97316;}
+
+    .chips {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:6px;
+    }
+    .chip {
+      padding:3px 8px;
+      border-radius:999px;
+      background:#020617;
+      border:1px solid #374151;
+      font-size:0.75rem;
+      color:#9ca3af;
+    }
+
+    /* ONLINE ROOM PANEL */
+    .online-panel {
+      margin-top:8px;
+      border-radius:10px;
+      border:1px solid #374151;
+      padding:7px;
+      font-size:0.8rem;
+      background:#020617;
+    }
+    .players-list {
+      margin-top:4px;
+      max-height:120px;
+      overflow-y:auto;
+      padding-right:4px;
+    }
+    .player-row {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:2px;
+    }
+    .badge-host {
+      font-size:0.65rem;
+      padding:2px 6px;
+      border-radius:999px;
+      border:1px solid #4ade80;
+      color:#bbf7d0;
+    }
+
+    @media (max-width:900px) {
+      .hero { grid-template-columns:minmax(0,1fr);}
+      .grid-2 { grid-template-columns:minmax(0,1fr);}
+      .game-grid { grid-template-columns:minmax(0,1fr);}
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-icon">ب</div>
+        <div>
+          <div>بودي سين جيم</div>
+          <div class="logo-text-sub">أقوى لعبة أسئلة جماعية</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <button class="nav-link" data-scroll="#modes">أنماط اللعب</button>
+        <button class="nav-link" data-scroll="#how">طريقة اللعب</button>
+        <button class="nav-link" data-scroll="#contact">تواصل</button>
+        <button class="nav-link primary" id="openGameBtn">ابدأ اللعب</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="layout">
+    <section class="hero">
+      <div>
+        <h1 class="hero-title">
+          بودي سين جيم: <span>سينجل + أونلاين</span> في نفس الموقع 🎮
+        </h1>
+        <p class="hero-subtitle">
+          كوّن فريقين على نفس الشاشة، أو افتح غرفة أونلاين وخلّ أصحابك يدخلون برابط أو كود.
+          أسئلة جاهزة + أسئلة قابلة للتطوير، ونظام نقاط للفريقين.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="openGameBtn2">▶️ ابدأ الآن</button>
+          <button class="btn btn-outline" data-scroll="#modes">استعرض المميزات</button>
+        </div>
+        <div class="tag">
+          <span>🎯 وضعان:</span>
+          <span>على نفس الجهاز</span>
+          <span>وضع أونلاين برابط</span>
+        </div>
+        <p class="hero-note">
+          شارك الرابط مع أي شخص على النت، أو استخدمه كأداة للفعاليات والجلسات.
+        </p>
+      </div>
+
+      <aside class="hero-card">
+        <div class="hero-card-header">
+          <span class="pill">جلسة تجريبية</span>
+          <span>نمط: سينجل / أونلاين</span>
+        </div>
+        <div class="teams">
+          <div class="team-card">
+            <div class="team-name team-a">فريق أ</div>
+            <div class="team-score team-a" id="heroScoreA">0</div>
+          </div>
+          <div class="team-card">
+            <div class="team-name team-b">فريق ب</div>
+            <div class="team-score team-b" id="heroScoreB">0</div>
+          </div>
+        </div>
+        <div class="categories-preview">
+          <span class="cat-chip">ثقافة عامة</span>
+          <span class="cat-chip">أفلام</span>
+          <span class="cat-chip">ألعاب</span>
+          <span class="cat-chip">أمثال</span>
+          <span class="cat-chip">أطفال</span>
+          <span class="cat-chip">أسئلة جريئة</span>
+        </div>
+        <p class="question-preview">
+          مثال سؤال: <span>ما هي عاصمة إسبانيا؟</span>
+        </p>
+        <div class="hero-card-footer">
+          اختر النمط، حدد الفئات، وابدأ الجولة. النقاط تتحكم فيها يدويًا،
+          والجلسة الأونلاين تتزامن مع كل اللاعبين.
+        </div>
+      </aside>
+    </section>
+
+    <section id="modes">
+      <h2 class="section-title">أنماط اللعب في بودي سين جيم</h2>
+      <p class="section-subtitle">اختر اللي يناسبك، أو استخدم الاثنين حسب المناسبة.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>🎮 نمط السينجل (على نفس الجهاز)</h3>
+          <ul class="list">
+            <li>مناسب للجلسات في البيت أو الكوفي.</li>
+            <li>تفتح الموقع على شاشة واحدة، والكل يشوف السؤال.</li>
+            <li>تختار الفئات وتلف الأسئلة بين الفريقين.</li>
+            <li>تزيد النقاط للفريق المناسب بضغطة زر.</li>
+          </ul>
+          <div class="chips">
+            <div class="chip">لا يحتاج نت قوي</div>
+            <div class="chip">مثالي للجلسات العائلية</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🌐 نمط الأونلاين (Multiplayer)</h3>
+          <ul class="list">
+            <li>تختار اسمك وتفتح غرفة خاصة بكود.</li>
+            <li>ترسل الكود لأصحابك يدخلون من أي مكان.</li>
+            <li>أنت الهوست: تتحكم في السؤال والنقاط.</li>
+            <li>كل المتصلين يشوفون السؤال والتحديث في نفس اللحظة.</li>
+          </ul>
+          <div class="chips">
+            <div class="chip">مناسب للسيرفرات والفعاليات</div>
+            <div class="chip">يعمل على أي متصفح</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2 class="section-title">طريقة اللعب</h2>
+      <p class="section-subtitle">خطوات بسيطة تخلي اللعبة واضحة للجميع.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>خطوات عامة</h3>
+          <ol class="list">
+            <li>حدد النمط: سينجل أو أونلاين.</li>
+            <li>في الأونلاين: أدخل اسمك وافتح غرفة جديدة أو ادخل كود غرفة.</li>
+            <li>اختر الفئات المناسبة (ثقافة عامة، أفلام، أطفال، ...).</li>
+            <li>اضغط "بدء الجولة" لبدء الأسئلة.</li>
+            <li>بعد كل إجابة صحيحة، اضغط زر +١ للفريق أو اللاعب المناسب.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>تخصيص اللعبة</h3>
+          <p>الكود كله مفتوح في صفحة واحدة. تقدر تضيف:</p>
+          <ul class="list">
+            <li>أسئلة جديدة لكل فئة.</li>
+            <li>فئات خاصة بسيرفرك أو مجتمعك.</li>
+            <li>إعلانات أو شعارات خاصة بك.</li>
+          </ul>
+          <p class="hint">مستقبلاً تقدر تربط الأسئلة بقاعدة بيانات وذكاء اصطناعي لو حاب تطورها أكثر.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">تواصل معنا (عدلها لبياناتك)</h2>
+      <p class="section-subtitle">هذا مجرد نموذج بسيط، عدّل الإيميل والمعلومات كما تحب.</p>
+      <div class="grid-2">
+        <form class="card" action="mailto:example@example.com" method="post" enctype="text/plain">
+          <div class="field">
+            <div class="field-label">الاسم الكامل</div>
+            <input class="field-input" type="text" name="name" placeholder="اكتب اسمك" required>
+          </div>
+          <div class="field">
+            <div class="field-label">البريد الإلكتروني</div>
+            <input class="field-input" type="email" name="email" placeholder="you@email.com" required>
+          </div>
+          <div class="field">
+            <div class="field-label">نوع الرسالة</div>
+            <select class="select-input" name="type">
+              <option value="general">استفسار عام</option>
+              <option value="custom">تطوير خاص</option>
+              <option value="bug">بلاغ عن مشكلة</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">الرسالة</div>
+            <textarea class="field-textarea" name="message" placeholder="اكتب رسالتك بالتفصيل"></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit" style="width:100%;">📩 إرسال</button>
+        </form>
+        <div class="card">
+          <p>ضع هنا بيانات تواصلك أنت:</p>
+          <ul class="list">
+            <li>📧 إيميل دعم رسمي.</li>
+            <li>🔗 رابط سيرفر ديسكورد.</li>
+            <li>📱 حسابات تيك توك / إنستغرام / تليجرام.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME OVERLAY -->
+  <div class="overlay" id="gameOverlay">
+    <div class="overlay-card">
+      <div class="overlay-header">
+        <div class="overlay-title">ابدأ لعبة بودي سين جيم</div>
+        <button class="overlay-close" id="closeGameOverlay">✕</button>
+      </div>
+
+      <div class="game-grid">
+        <!-- LEFT: MODE & ONLINE ROOM -->
+        <div>
+          <div class="pill-small">اختر نمط اللعب</div>
+          <div class="chips">
+            <button class="chip" data-mode="local" id="modeLocal">🎮 سينجل (نفس الجهاز)</button>
+            <button class="chip" data-mode="online" id="modeOnline">🌐 أونلاين (غرفة برابط)</button>
+          </div>
+
+          <div class="online-panel" id="onlinePanel" style="display:none;">
+            <div class="field">
+              <div class="field-label">اسم اللاعب</div>
+              <input class="field-input" id="playerNameInput" placeholder="اكتب اسمك">
+            </div>
+            <div class="field">
+              <div class="field-label">خيارات الغرفة</div>
+              <div style="display:flex; gap:6px; margin-top:4px; flex-wrap:wrap;">
+                <button class="btn btn-outline" type="button" id="btnCreateRoom">إنشاء غرفة جديدة</button>
+                <input class="field-input" id="joinRoomCode" placeholder="كود الغرفة" style="max-width:120px;">
+                <button class="btn btn-outline" type="button" id="btnJoinRoom">دخول</button>
+              </div>
+            </div>
+
+            <div id="roomInfo" style="display:none;">
+              <div class="field-label">بيانات الغرفة</div>
+              <div class="chips">
+                <div class="chip">الكود: <span id="roomCodeDisplay"></span></div>
+                <div class="chip" id="roomRoleChip"></div>
+              </div>
+              <div class="field-label" style="margin-top:6px;">اللاعبون المتصلون</div>
+              <div class="players-list" id="playersList"></div>
+              <p class="hint">إذا كنت الهوست، أنت الوحيد اللي يقدر يبدأ الجولة ويغير الأسئلة ويزيد النقاط.</p>
+            </div>
+          </div>
+
+          <p class="hint" id="modeHint">
+            اختر نمط السينجل لو تلعب على نفس الشاشة، أو الأونلاين لو بتشارك الرابط مع أصدقائك.
+          </p>
+        </div>
+
+        <!-- RIGHT: CATEGORY & QUESTIONS -->
+        <div class="game-main">
+          <div class="game-meta">
+            <span>الفئة الحالية: </span>
+            <span id="currentCategoryLabel">لم يتم اختيار فئات بعد</span>
+          </div>
+          <div class="game-question" id="currentQuestion">
+            اختر الفئات ثم اضغط "بدء الجولة" لعرض أول سؤال.
+          </div>
+
+          <div class="game-scores">
+            <span><span class="team-label team-a-text">فريق أ:</span> <strong id="scoreA">0</strong></span>
+            <span><span class="team-label team-b-text">فريق ب:</span> <strong id="scoreB">0</strong></span>
+          </div>
+
+          <div style="display:flex; gap:6px; margin-bottom:6px;">
+            <button class="btn btn-outline" id="btnStartRound">▶️ بدء الجولة</button>
+            <button class="btn btn-primary" id="btnNextQuestion" disabled>🔁 السؤال التالي</button>
+          </div>
+
+          <div style="display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap;">
+            <button class="btn btn-outline" id="btnScoreA">+١ لفريق أ</button>
+            <button class="btn btn-outline" id="btnScoreB">+١ لفريق ب</button>
+            <button class="btn btn-outline" id="btnResetScores">إعادة تعيين</button>
+          </div>
+
+          <div class="pill-small" style="margin-bottom:4px;">الفئات المتاحة</div>
+          <div class="game-cats" id="categoriesGrid"></div>
+
+          <p class="hint">
+            <strong>ملاحظة:</strong> في نمط الأونلاين، الهوست فقط هو اللي يغير السؤال ويزيد النقاط،
+            وكل التحديثات تظهر عند الجميع مباشرة.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== بيانات الفئات والأسئلة (تقدر تزود عليها زي ما تبغى) =====
+    const categories = [
+      {
+        id: "general",
+        name: "ثقافة عامة",
+        difficulty: "سهل - متوسط",
+        questions: [
+          "ما هي عاصمة إسبانيا؟",
+          "كم عدد قارات العالم؟",
+          "ما هو أطول نهر في العالم؟",
+          "ما هي العملة الرسمية لليابان؟",
+          "في أي قارة تقع دولة البرازيل؟"
+        ]
+      },
+      {
+        id: "movies",
+        name: "أفلام ومسلسلات",
+        difficulty: "متوسط",
+        questions: [
+          "اذكر اسم فيلم أنيميشن مشهور تفضله.",
+          "مسلسل تقدر تعيده أكثر من مرة وما تمل؟",
+          "من الممثل الذي أدى دور آيرون مان في عالم مارفل؟",
+          "فيلم رعب خلّاك ما تنام بسببه؟",
+          "تفضل المسلسلات القصيرة أم الطويلة؟ ولماذا؟"
+        ]
+      },
+      {
+        id: "games",
+        name: "ألعاب",
+        difficulty: "متنوع",
+        questions: [
+          "اذكر لعبة أونلاين تلعبها دائماً مع أصحابك.",
+          "لو تختار لعبة واحدة تلعبها سنة كاملة، ماذا تختار؟",
+          "أول لعبة تتذكر أنك لعبتها؟",
+          "تفضّل ألعاب الجوال أم الكمبيوتر؟ ولماذا؟",
+          "أصعب لعبة ختمتها؟"
+        ]
+      },
+      {
+        id: "sayings",
+        name: "أمثال وعبارات",
+        difficulty: "سهل",
+        questions: [
+          "أكمل المثل: الباب اللي يجيك منه الريح...",
+          "اذكر مثل شعبي تستخدمه كثير.",
+          "هل تتفق مع مقولة: (الوقت كالسيف إن لم تقطعه قطعك)؟",
+          "أكمل: من جدّ وجد ومن...",
+          "عبارة إيجابية تحب تكررها لنفسك."
+        ]
+      },
+      {
+        id: "kids",
+        name: "أطفال",
+        difficulty: "سهل",
+        questions: [
+          "ما هو لون السماء في يوم صافٍ؟",
+          "اذكر اسم حيوان يعيش في البحر.",
+          "كم عدد أرجل العنكبوت؟",
+          "ما هو الشيء الذي نكتب به على الدفتر؟",
+          "ما هو الحيوان الذي يلقب بملك الغابة؟"
+        ]
+      },
+      {
+        id: "bold",
+        name: "أسئلة جريئة خفيفة",
+        difficulty: "للكبار",
+        questions: [
+          "قرار أخذته وندمت عليه لاحقاً؟",
+          "صفة فيك تحبها، وصفة تتمنى تغيرها؟",
+          "لو تقدر تغيّر شيء واحد في حياتك الآن، ماذا يكون؟",
+          "شخص تتمنى تعتذر له؟",
+          "أكبر خوف عندك في المستقبل؟"
+        ]
+      }
+    ];
+
+    // ===== واجهة عامة =====
+    document.querySelectorAll("[data-scroll]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sel = btn.getAttribute("data-scroll");
+        const el = document.querySelector(sel);
+        if (el) {
+          window.scrollTo({
+            top: el.offsetTop - 70,
+            behavior: "smooth"
+          });
+        }
+      });
+    });
+
+    const heroScoreA = document.getElementById("heroScoreA");
+    const heroScoreB = document.getElementById("heroScoreB");
+
+    // ===== GAME OVERLAY =====
+    const gameOverlay = document.getElementById("gameOverlay");
+    const closeGameOverlay = document.getElementById("closeGameOverlay");
+    const openGameBtn = document.getElementById("openGameBtn");
+    const openGameBtn2 = document.getElementById("openGameBtn2");
+
+    const modeLocalBtn = document.getElementById("modeLocal");
+    const modeOnlineBtn = document.getElementById("modeOnline");
+    const modeHint = document.getElementById("modeHint");
+    const onlinePanel = document.getElementById("onlinePanel");
+
+    const categoriesGrid = document.getElementById("categoriesGrid");
+    const currentCategoryLabel = document.getElementById("currentCategoryLabel");
+    const currentQuestionEl = document.getElementById("currentQuestion");
+
+    const scoreAEl = document.getElementById("scoreA");
+    const scoreBEl = document.getElementById("scoreB");
+    const btnStartRound = document.getElementById("btnStartRound");
+    const btnNextQuestion = document.getElementById("btnNextQuestion");
+    const btnScoreA = document.getElementById("btnScoreA");
+    const btnScoreB = document.getElementById("btnScoreB");
+    const btnResetScores = document.getElementById("btnResetScores");
+
+    // online
+    const playerNameInput = document.getElementById("playerNameInput");
+    const btnCreateRoom = document.getElementById("btnCreateRoom");
+    const btnJoinRoom = document.getElementById("btnJoinRoom");
+    const joinRoomCodeInput = document.getElementById("joinRoomCode");
+    const roomInfo = document.getElementById("roomInfo");
+    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+    const roomRoleChip = document.getElementById("roomRoleChip");
+    const playersList = document.getElementById("playersList");
+
+    let mode = "local"; // local | online
+    let selectedCategoriesState = {}; // id: "none" | "teamA" | "teamB"
+    categories.forEach(c => selectedCategoriesState[c.id] = "none");
+
+    let scoreA = 0;
+    let scoreB = 0;
+    let localSelectedCatsOrder = [];
+    let localCatIndex = 0;
+    let localQuestionIndex = 0;
+
+    function openOverlay() {
+      gameOverlay.classList.add("visible");
+    }
+    function closeOverlay() {
+      gameOverlay.classList.remove("visible");
+    }
+    openGameBtn.addEventListener("click", openOverlay);
+    openGameBtn2.addEventListener("click", openOverlay);
+    closeGameOverlay.addEventListener("click", closeOverlay);
+    gameOverlay.addEventListener("click", (e) => {
+      if (e.target === gameOverlay) closeOverlay();
+    });
+
+    // ===== وضع اللعب =====
+    function setMode(newMode) {
+      mode = newMode;
+      if (mode === "local") {
+        onlinePanel.style.display = "none";
+        modeHint.textContent = "نمط السينجل: الجلسة كلها على نفس الجهاز، مثالي للبيت أو الكوفي.";
+        modeLocalBtn.style.borderColor = "#4ade80";
+        modeOnlineBtn.style.borderColor = "#374151";
+      } else {
+        onlinePanel.style.display = "block";
+        modeHint.textContent = "نمط الأونلاين: افتح غرفة بكود، وشارك الكود مع أصحابك ليدخلوا من أي مكان.";
+        modeOnlineBtn.style.borderColor = "#4ade80";
+        modeLocalBtn.style.borderColor = "#374151";
+      }
+    }
+    setMode("local");
+    modeLocalBtn.addEventListener("click", () => setMode("local"));
+    modeOnlineBtn.addEventListener("click", () => setMode("online"));
+
+    // ===== الفئات في الواجهة =====
+    function renderCategories() {
+      categoriesGrid.innerHTML = "";
+      categories.forEach(cat => {
+        const card = document.createElement("div");
+        card.className = "cat-card";
+        const state = selectedCategoriesState[cat.id];
+        if (state === "teamA") card.classList.add("selected-team-a");
+        if (state === "teamB") card.classList.add("selected-team-b");
+
+        card.innerHTML = `
+          <div class="cat-name">${cat.name}</div>
+          <div class="cat-meta">الصعوبة: ${cat.difficulty}<br>أسئلة: ${cat.questions.length}</div>
+        `;
+        card.addEventListener("click", () => {
+          const now = selectedCategoriesState[cat.id];
+          if (now === "none") selectedCategoriesState[cat.id] = "teamA";
+          else if (now === "teamA") selectedCategoriesState[cat.id] = "teamB";
+          else selectedCategoriesState[cat.id] = "none";
+          renderCategories();
+        });
+        categoriesGrid.appendChild(card);
+      });
+    }
+    renderCategories();
+
+    function updateScoresUI() {
+      scoreAEl.textContent = scoreA;
+      scoreBEl.textContent = scoreB;
+      heroScoreA.textContent = scoreA;
+      heroScoreB.textContent = scoreB;
+    }
+    updateScoresUI();
+
+    function gatherSelectedCatsOrder() {
+      const a = [], b = [];
+      Object.keys(selectedCategoriesState).forEach(id => {
+        if (selectedCategoriesState[id] === "teamA") a.push(id);
+        if (selectedCategoriesState[id] === "teamB") b.push(id);
+      });
+      return [...a, ...b];
+    }
+
+    function getNextQuestionFromLocal() {
+      if (!localSelectedCatsOrder.length) {
+        currentCategoryLabel.textContent = "لم يتم اختيار فئات";
+        return null;
+      }
+      const catId = localSelectedCatsOrder[localCatIndex];
+      const cat = categories.find(c => c.id === catId);
+      currentCategoryLabel.textContent = cat.name;
+      const q = cat.questions[localQuestionIndex] || "لا توجد أسئلة إضافية في هذه الفئة.";
+      localQuestionIndex++;
+      if (localQuestionIndex >= cat.questions.length) {
+        localQuestionIndex = 0;
+        localCatIndex++;
+        if (localCatIndex >= localSelectedCatsOrder.length) localCatIndex = 0;
+      }
+      return q;
+    }
+
+    btnStartRound.addEventListener("click", () => {
+      if (mode === "local") {
+        localSelectedCatsOrder = gatherSelectedCatsOrder();
+        if (!localSelectedCatsOrder.length) {
+          alert("اختر على الأقل فئة واحدة قبل بدء الجولة.");
+          return;
+        }
+        localCatIndex = 0;
+        localQuestionIndex = 0;
+        scoreA = 0; scoreB = 0;
+        updateScoresUI();
+        const q = getNextQuestionFromLocal();
+        if (q) {
+          currentQuestionEl.textContent = q;
+          btnNextQuestion.disabled = false;
+        }
+      } else if (mode === "online") {
+        if (!roomCode) {
+          alert("يجب أن تنضم لغرفة أو تنشئ غرفة أولاً.");
+          return;
+        }
+        if (!isHost) {
+          alert("فقط الهوست يمكنه بدء الجولة في الأونلاين.");
+          return;
+        }
+        const { teamACats, teamBCats } = gatherSelectedOnlineCats();
+        if (!teamACats.length && !teamBCats.length) {
+          alert("اختر فئات للأونلاين (اضغط على الفئات لتعيينها للفريق أ أو ب).");
+          return;
+        }
+        onlineSelectedCatsOrder = [...teamACats, ...teamBCats];
+        onlineCatIndex = 0;
+        onlineQuestionIndex = 0;
+        socket.emit("startRoundOnline", { roomCode, categoryId: onlineSelectedCatsOrder[0] });
+        const q = getNextOnlineQuestion();
+        if (q) {
+          socket.emit("nextQuestionOnline", { roomCode, question: q });
+          btnNextQuestion.disabled = false;
+        }
+      }
+    });
+
+    btnNextQuestion.addEventListener("click", () => {
+      if (mode === "local") {
+        const q = getNextQuestionFromLocal();
+        if (q) currentQuestionEl.textContent = q;
+      } else if (mode === "online" && isHost && roomCode) {
+        const q = getNextOnlineQuestion();
+        if (q) socket.emit("nextQuestionOnline", { roomCode, question: q });
+      }
+    });
+
+    btnScoreA.addEventListener("click", () => {
+      if (mode === "local") {
+        scoreA++; updateScoresUI();
+      } else if (mode === "online" && isHost && roomCode) {
+        socket.emit("addScoreOnline", { roomCode, socketId: hostSocketId || socket.id, amount: 1 });
+      }
+    });
+
+    btnScoreB.addEventListener("click", () => {
+      if (mode === "local") {
+        scoreB++; updateScoresUI();
+      } else if (mode === "online" && isHost && roomCode) {
+        // في الأونلاين، النقاط مرتبطة باللاعبين وليس فريق أ/ب
+        alert("في نمط الأونلاين، النقاط مرتبطة بكل لاعب، عدل الكود لاحقاً لو تبي نظام فرق.");
+      }
+    });
+
+    btnResetScores.addEventListener("click", () => {
+      if (mode === "local") {
+        scoreA = 0; scoreB = 0; updateScoresUI();
+      } else if (mode === "online" && isHost && roomCode) {
+        socket.emit("resetScoresOnline", { roomCode });
+      }
+    });
+
+    // ===== ONLINE WITH SOCKET.IO =====
+    const socket = io();
+    let roomCode = null;
+    let isHost = false;
+    let players = {};
+    let hostSocketId = null;
+
+    function renderPlayers() {
+      playersList.innerHTML = "";
+      Object.entries(players).forEach(([id, player]) => {
+        const row = document.createElement("div");
+        row.className = "player-row";
+        row.innerHTML = `
+          <span>${player.name}</span>
+          <span>${player.score} نقطة ${id === hostSocketId ? '<span class="badge-host">هوست</span>' : ""}</span>
+        `;
+        playersList.appendChild(row);
+      });
+    }
+
+    function gatherSelectedOnlineCats() {
+      const teamACats = [];
+      const teamBCats = [];
+      Object.keys(selectedCategoriesState).forEach(id => {
+        if (selectedCategoriesState[id] === "teamA") teamACats.push(id);
+        if (selectedCategoriesState[id] === "teamB") teamBCats.push(id);
+      });
+      return { teamACats, teamBCats };
+    }
+
+    let onlineSelectedCatsOrder = [];
+    let onlineCatIndex = 0;
+    let onlineQuestionIndex = 0;
+
+    function getNextOnlineQuestion() {
+      if (!onlineSelectedCatsOrder.length) return null;
+      const catId = onlineSelectedCatsOrder[onlineCatIndex];
+      const cat = categories.find(c => c.id === catId);
+      currentCategoryLabel.textContent = cat.name;
+      const q = cat.questions[onlineQuestionIndex] || "لا توجد أسئلة إضافية في هذه الفئة.";
+      onlineQuestionIndex++;
+      if (onlineQuestionIndex >= cat.questions.length) {
+        onlineQuestionIndex = 0;
+        onlineCatIndex++;
+        if (onlineCatIndex >= onlineSelectedCatsOrder.length) onlineCatIndex = 0;
+      }
+      return q;
+    }
+
+    btnCreateRoom.addEventListener("click", () => {
+      const playerName = playerNameInput.value.trim() || "ضيف";
+      socket.emit("createRoom", { playerName }, ({ roomCode: code, isHost: host, players: p }) => {
+        roomCode = code;
+        isHost = host;
+        players = p;
+        hostSocketId = socket.id;
+        roomCodeDisplay.textContent = roomCode;
+        roomRoleChip.textContent = isHost ? "أنت الهوست" : "لاعب";
+        roomInfo.style.display = "block";
+        renderPlayers();
+      });
+    });
+
+    btnJoinRoom.addEventListener("click", () => {
+      const playerName = playerNameInput.value.trim() || "ضيف";
+      const code = joinRoomCodeInput.value.trim();
+      if (!code) {
+        alert("أدخل كود الغرفة.");
+        return;
+      }
+      socket.emit("joinRoom", { roomCode: code, playerName }, (res) => {
+        if (res.error) {
+          alert(res.error);
+          return;
+        }
+        roomCode = res.roomCode;
+        isHost = res.isHost;
+        players = res.players;
+        hostSocketId = Object.keys(res.players).find(id => res.players[id].score === res.players[id].score); // تقريبية
+        roomCodeDisplay.textContent = roomCode;
+        roomRoleChip.textContent = isHost ? "أنت الهوست" : "لاعب";
+        roomInfo.style.display = "block";
+        renderPlayers();
+      });
+    });
+
+    socket.on("playersUpdate", (updatedPlayers) => {
+      players = updatedPlayers;
+      renderPlayers();
+    });
+
+    socket.on("onlineRoundStarted", ({ categoryId }) => {
+      const cat = categories.find(c => c.id === categoryId);
+      if (cat) {
+        currentCategoryLabel.textContent = cat.name;
+      }
+      btnNextQuestion.disabled = !isHost;
+    });
+
+    socket.on("onlineQuestionUpdate", (question) => {
+      currentQuestionEl.textContent = question;
+    });
+  </script>
+</body>
+</html>
